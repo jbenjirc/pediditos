@@ -2,11 +2,8 @@
 
 import { useMemo, useState, useTransition } from "react";
 import type { Establecimiento, Producto } from "@/features/catalogo/queries";
-import {
-  crearPedido,
-  olvidarNegocio,
-  type ResultadoPedido,
-} from "@/features/pedidos/actions";
+import { crearPedido, olvidarNegocio } from "@/features/pedidos/actions";
+import type { ResultadoPedido } from "@/features/pedidos/tipos";
 import {
   PasoCantidades,
   PasoCuando,
