@@ -1,26 +1,81 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* =========================================================================
+   Sistema de diseño · "Acero y sabor"
+   La interfaz es neutra y fría; TODO el color viene del producto.
+   ========================================================================= */
+
+@theme {
+  /* ---- Superficies ---- */
+  --color-lienzo: #eceff0;
+  --color-superficie: #ffffff;
+  --color-elevado: #f6f8f8;
+  --color-borde: #d7dedd;
+  --color-borde-fuerte: #b6c1c0;
+
+  /* ---- Tinta ---- */
+  --color-tinta: #14181a;
+  --color-tinta-media: #4a5560;
+  --color-tinta-suave: #7d8891;
+
+  /* ---- Acción ---- */
+  --color-acento: #0f5c4a;
+  --color-acento-vivo: #14795f;
+  --color-alerta: #a8322c;
+  --color-aviso: #b4750d;
+
+  /* ---- Sabores · única fuente de saturación en la app ---- */
+  --color-maracuya: #f2a104;
+  --color-limon-chia: #7d9f4a;
+  --color-limon-fresa: #e0556b;
+  --color-horchata: #cbb18c;
+  --color-jamaica: #8e1b47;
+  --color-tamarindo: #a4562a;
+  --color-guanabana: #9fb59a;
+
+  /* ---- Estados del pedido ---- */
+  --color-recibido: #4a5560;
+  --color-recoleccion: #b4750d;
+  --color-reparto: #1f6f9c;
+  --color-entregado: #0f5c4a;
+
+  /* ---- Tipografía ---- */
+  --font-display: var(--fuente-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--fuente-cuerpo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--fuente-mono), ui-monospace, monospace;
+
+  --radius-caja: 0.625rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: var(--color-lienzo);
+    color: var(--color-tinta);
+    font-family: var(--font-sans);
+  }
+
+  /* Cifras tabulares: folios y cantidades alinean en columna perfecta */
+  .cifras {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-acento);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
