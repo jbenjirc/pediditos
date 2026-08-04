@@ -1,10 +1,30 @@
-export default function PantallaOrdenar() {
+import {
+  obtenerCatalogo,
+  obtenerEstablecimientos,
+} from "@/features/catalogo/queries";
+import { FormularioOrdenar } from "@/features/pedidos/components/formulario-ordenar";
+
+export default async function PantallaOrdenar() {
+  const [catalogo, establecimientos] = await Promise.all([
+    obtenerCatalogo(),
+    obtenerEstablecimientos(),
+  ]);
+
   return (
-    <div className="rounded-caja border border-dashed border-borde px-6 py-16 text-center">
-      <h1 className="font-display text-xl font-semibold">Ordenar</h1>
-      <p className="mx-auto mt-2 max-w-md text-[15px] text-tinta-media">
-        Captura de pedidos por teléfono o mostrador. Pendiente para la Fase 4.
-      </p>
-    </div>
+    <>
+      <header className="mb-5">
+        <h1 className="font-display text-2xl font-semibold tracking-tight">
+          Ordenar
+        </h1>
+        <p className="mt-0.5 text-[15px] text-tinta-media">
+          Captura de pedidos por teléfono o mostrador.
+        </p>
+      </header>
+
+      <FormularioOrdenar
+        catalogo={catalogo}
+        establecimientos={establecimientos}
+      />
+    </>
   );
 }

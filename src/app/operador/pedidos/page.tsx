@@ -6,6 +6,7 @@ import {
 } from "@/features/pedidos/queries";
 import { ColumnaPedidos } from "@/features/pedidos/components/columna-pedidos";
 import { FiltrosTablero } from "@/features/pedidos/components/filtros-tablero";
+import { AutoRefresco } from "@/features/pedidos/components/auto-refresco";
 import { etiquetaDia, fechaLocal } from "@/lib/fechas";
 
 export default async function PantallaPedidos({
@@ -35,15 +36,18 @@ export default async function PantallaPedidos({
 
   return (
     <>
-      <header className="mb-5">
-        <h1 className="font-display text-2xl font-semibold tracking-tight">
-          {buscando ? `Resultados para "${folio}"` : "Pedidos de hoy"}
-        </h1>
-        <p className="mt-0.5 text-[15px] text-tinta-media">
-          {buscando
-            ? "La búsqueda por folio incluye pedidos de cualquier día."
-            : etiquetaDia(hoy)}
-        </p>
+      <header className="mb-5 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-semibold tracking-tight">
+            {buscando ? `Resultados para "${folio}"` : "Pedidos de hoy"}
+          </h1>
+          <p className="mt-0.5 text-[15px] text-tinta-media">
+            {buscando
+              ? "La búsqueda por folio incluye pedidos de cualquier día."
+              : etiquetaDia(hoy)}
+          </p>
+        </div>
+        <AutoRefresco />
       </header>
 
       <Suspense>
