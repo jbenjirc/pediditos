@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { salir } from "@/features/acceso/actions";
+import { BotonPantallaCompleta } from "@/components/boton-pantalla-completa";
 
 const SECCIONES = [
   { href: "/operador/ordenar", etiqueta: "Ordenar" },
@@ -44,6 +45,8 @@ export function NavOperador() {
             })}
           </ul>
         </nav>
+
+        <BotonPantallaCompleta />
 
         <form action={salir}>
           <button
