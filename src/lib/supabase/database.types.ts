@@ -334,6 +334,7 @@ export type Database = {
       crear_pedido: { Args: { p_pedido: Json }; Returns: Json }
       esta_bloqueado: { Args: { p_ip: string }; Returns: boolean }
       registrar_intento_fallido: { Args: { p_ip: string }; Returns: boolean }
+      resumen_produccion: { Args: { p_filtros: Json }; Returns: Json }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       siguiente_folio: { Args: never; Returns: string }
