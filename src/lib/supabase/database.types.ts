@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      conceptos_gasto: {
+        Row: {
+          activo: boolean
+          categoria: Database["public"]["Enums"]["categoria_gasto"]
+          creado_en: string
+          id: string
+          nombre: string
+          nombre_busqueda: string | null
+          orden_visual: number
+          unidad_default: string | null
+        }
+        Insert: {
+          activo?: boolean
+          categoria: Database["public"]["Enums"]["categoria_gasto"]
+          creado_en?: string
+          id?: string
+          nombre: string
+          nombre_busqueda?: string | null
+          orden_visual?: number
+          unidad_default?: string | null
+        }
+        Update: {
+          activo?: boolean
+          categoria?: Database["public"]["Enums"]["categoria_gasto"]
+          creado_en?: string
+          id?: string
+          nombre?: string
+          nombre_busqueda?: string | null
+          orden_visual?: number
+          unidad_default?: string | null
+        }
+        Relationships: []
+      }
       contadores_folio: {
         Row: {
           fecha: string
@@ -73,6 +106,66 @@ export type Database = {
           verificado?: boolean
         }
         Relationships: []
+      }
+      gastos: {
+        Row: {
+          cantidad: number | null
+          categoria: Database["public"]["Enums"]["categoria_gasto"]
+          concepto_id: string
+          concepto_nombre: string
+          creado_en: string
+          creado_por: string | null
+          eliminado_en: string | null
+          fecha: string
+          id: string
+          monto_centavos: number
+          notas: string | null
+          unidad: string | null
+        }
+        Insert: {
+          cantidad?: number | null
+          categoria: Database["public"]["Enums"]["categoria_gasto"]
+          concepto_id: string
+          concepto_nombre: string
+          creado_en?: string
+          creado_por?: string | null
+          eliminado_en?: string | null
+          fecha?: string
+          id?: string
+          monto_centavos: number
+          notas?: string | null
+          unidad?: string | null
+        }
+        Update: {
+          cantidad?: number | null
+          categoria?: Database["public"]["Enums"]["categoria_gasto"]
+          concepto_id?: string
+          concepto_nombre?: string
+          creado_en?: string
+          creado_por?: string | null
+          eliminado_en?: string | null
+          fecha?: string
+          id?: string
+          monto_centavos?: number
+          notas?: string | null
+          unidad?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gastos_concepto_id_fkey"
+            columns: ["concepto_id"]
+            isOneToOne: false
+            referencedRelation: "conceptos_gasto"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gastos_creado_por_fkey"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       intentos_acceso: {
         Row: {
@@ -260,6 +353,63 @@ export type Database = {
           },
         ]
       }
+      produccion: {
+        Row: {
+          cantidad: number
+          categoria: Database["public"]["Enums"]["categoria_producto"]
+          creado_en: string
+          creado_por: string | null
+          eliminado_en: string | null
+          fecha: string
+          id: string
+          notas: string | null
+          producto_id: string
+          producto_nombre: string
+          producto_presentacion: string | null
+        }
+        Insert: {
+          cantidad: number
+          categoria: Database["public"]["Enums"]["categoria_producto"]
+          creado_en?: string
+          creado_por?: string | null
+          eliminado_en?: string | null
+          fecha?: string
+          id?: string
+          notas?: string | null
+          producto_id: string
+          producto_nombre: string
+          producto_presentacion?: string | null
+        }
+        Update: {
+          cantidad?: number
+          categoria?: Database["public"]["Enums"]["categoria_producto"]
+          creado_en?: string
+          creado_por?: string | null
+          eliminado_en?: string | null
+          fecha?: string
+          id?: string
+          notas?: string | null
+          producto_id?: string
+          producto_nombre?: string
+          producto_presentacion?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "produccion_creado_por_fkey"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "produccion_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       productos: {
         Row: {
           activo: boolean
@@ -334,12 +484,14 @@ export type Database = {
       crear_pedido: { Args: { p_pedido: Json }; Returns: Json }
       esta_bloqueado: { Args: { p_ip: string }; Returns: boolean }
       registrar_intento_fallido: { Args: { p_ip: string }; Returns: boolean }
+      resumen_inventario: { Args: { p_filtros: Json }; Returns: Json }
       resumen_produccion: { Args: { p_filtros: Json }; Returns: Json }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       siguiente_folio: { Args: never; Returns: string }
     }
     Enums: {
+      categoria_gasto: "materia_prima" | "insumo"
       categoria_producto: "agua" | "pulpa"
       estado_pedido:
         | "recibido"
@@ -476,6 +628,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      categoria_gasto: ["materia_prima", "insumo"],
       categoria_producto: ["agua", "pulpa"],
       estado_pedido: [
         "recibido",
