@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { exigirSesion } from "@/lib/auth/sesion";
-import { esquemaPedido, type DatosPedido } from "@/features/pedidos/schema";
+import {
+  esquemaPedidoOperador,
+  type DatosPedidoOperador,
+} from "@/features/pedidos/schema";
 import type {
   RespuestaCrearPedido,
   ResultadoPedido,
@@ -18,11 +21,11 @@ import { fechaLocal } from "@/lib/fechas";
  * que dice si la pantalla del cliente está sirviendo o no.
  */
 export async function crearPedidoOperador(
-  datos: DatosPedido,
+  datos: DatosPedidoOperador,
 ): Promise<ResultadoPedido> {
   await exigirSesion();
 
-  const parsed = esquemaPedido.safeParse(datos);
+  const parsed = esquemaPedidoOperador.safeParse(datos);
   if (!parsed.success) {
     return {
       ok: false,
@@ -40,6 +43,7 @@ export async function crearPedidoOperador(
       fecha_entrega: fechaLocal(d.fechaEntrega === "manana" ? 1 : 0),
       hora_apertura: d.horaApertura,
       req_etiquetado: d.reqEtiquetado,
+      metodo_pago: d.metodoPago,
       notas: d.notas,
       origen: "operador",
       dispositivo: `mostrador · ${h.get("user-agent") ?? ""}`,

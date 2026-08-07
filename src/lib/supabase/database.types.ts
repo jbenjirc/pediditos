@@ -291,6 +291,7 @@ export type Database = {
           folio: string
           hora_apertura: string
           id: string
+          metodo_pago: Database["public"]["Enums"]["metodo_pago"] | null
           notas: string | null
           origen: Database["public"]["Enums"]["origen_pedido"]
           req_etiquetado: boolean
@@ -311,6 +312,7 @@ export type Database = {
           folio?: string
           hora_apertura: string
           id?: string
+          metodo_pago?: Database["public"]["Enums"]["metodo_pago"] | null
           notas?: string | null
           origen?: Database["public"]["Enums"]["origen_pedido"]
           req_etiquetado?: boolean
@@ -331,6 +333,7 @@ export type Database = {
           folio?: string
           hora_apertura?: string
           id?: string
+          metodo_pago?: Database["public"]["Enums"]["metodo_pago"] | null
           notas?: string | null
           origen?: Database["public"]["Enums"]["origen_pedido"]
           req_etiquetado?: boolean
@@ -499,6 +502,7 @@ export type Database = {
         | "en_reparto"
         | "entregado"
         | "cancelado"
+      metodo_pago: "efectivo" | "transferencia" | "mixto"
       origen_pedido: "cliente" | "operador"
       rol_usuario: "admin" | "operador" | "repartidor"
     }
@@ -637,6 +641,7 @@ export const Constants = {
         "entregado",
         "cancelado",
       ],
+      metodo_pago: ["efectivo", "transferencia", "mixto"],
       origen_pedido: ["cliente", "operador"],
       rol_usuario: ["admin", "operador", "repartidor"],
     },

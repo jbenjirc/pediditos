@@ -44,6 +44,7 @@ export async function crearPedido(
       fecha_entrega: fechaLocal(d.fechaEntrega === "manana" ? 1 : 0),
       hora_apertura: d.horaApertura,
       req_etiquetado: d.reqEtiquetado,
+      metodo_pago: d.metodoPago,
       notas: d.notas,
       origen: "cliente",
       dispositivo,

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { METODOS_PAGO } from "@/features/pedidos/metodos-pago";
 import { etiquetaDia, horaLegible } from "@/lib/fechas";
 import { BotonImprimir } from "./boton-imprimir";
 
@@ -18,7 +19,7 @@ export default async function Recibo({
   const { data } = await supabaseAdmin
     .from("pedidos")
     .select(
-      "folio, establecimiento_nombre, hora_apertura, fecha_entrega, req_etiquetado, notas, total_botellas, pedido_items(producto_nombre, producto_presentacion, categoria, cantidad)",
+      "folio, establecimiento_nombre, hora_apertura, fecha_entrega, req_etiquetado, metodo_pago, notas, total_botellas, pedido_items(producto_nombre, producto_presentacion, categoria, cantidad)",
     )
     .eq("folio", decodeURIComponent(folio))
     .is("eliminado_en", null)
@@ -95,6 +96,14 @@ export default async function Recibo({
           <span className="text-tinta-media">Etiquetado:</span>{" "}
           <span className="font-medium">
             {data.req_etiquetado ? "Sí" : "No"}
+          </span>
+        </p>
+        <p>
+          <span className="text-tinta-media">Pago:</span>{" "}
+          <span className="font-medium">
+            {data.metodo_pago
+              ? METODOS_PAGO[data.metodo_pago].etiqueta
+              : "Sin definir"}
           </span>
         </p>
         {data.notas && (

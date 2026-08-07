@@ -1,6 +1,7 @@
 import "server-only";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { EstadoPedido } from "@/features/pedidos/estados";
+import type { MetodoPago } from "@/features/pedidos/metodos-pago";
 
 export type ItemPedido = {
   producto_nombre: string;
@@ -19,6 +20,7 @@ export type PedidoTablero = {
   creado_en: string;
   estado: EstadoPedido;
   req_etiquetado: boolean;
+  metodo_pago: MetodoPago | null;
   notas: string | null;
   total_botellas: number;
   pedido_items: ItemPedido[];
@@ -26,7 +28,7 @@ export type PedidoTablero = {
 
 const CAMPOS = `
   id, folio, establecimiento_nombre, hora_apertura, fecha_entrega, creado_en,
-  estado, req_etiquetado, notas, total_botellas,
+  estado, req_etiquetado, metodo_pago, notas, total_botellas,
   pedido_items ( producto_nombre, producto_presentacion, categoria, cantidad,
                  productos ( color_hex ) )
 `;

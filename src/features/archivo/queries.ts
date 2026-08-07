@@ -1,6 +1,7 @@
 import "server-only";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { EstadoPedido } from "@/features/pedidos/estados";
+import type { MetodoPago } from "@/features/pedidos/metodos-pago";
 import { POR_PAGINA, type FiltrosArchivo } from "@/features/archivo/filtros";
 
 export type FilaArchivo = {
@@ -12,6 +13,7 @@ export type FilaArchivo = {
   creado_en: string;
   estado: EstadoPedido;
   req_etiquetado: boolean;
+  metodo_pago: MetodoPago | null;
   origen: "cliente" | "operador";
   total_botellas: number;
   archivado_en: string | null;
@@ -41,7 +43,8 @@ export async function listarArchivo(
 ): Promise<{ filas: FilaArchivo[]; total: number }> {
   let q = supabaseAdmin.from("pedidos").select(
     `id, folio, establecimiento_nombre, fecha_entrega, hora_apertura, creado_en,
-       estado, req_etiquetado, origen, total_botellas, archivado_en, eliminado_en`,
+       estado, req_etiquetado, metodo_pago, origen, total_botellas,
+       archivado_en, eliminado_en`,
     { count: "exact" },
   );
 
@@ -56,6 +59,7 @@ export async function listarArchivo(
     if (f.estado) q = q.eq("estado", f.estado);
     if (f.etiquetado !== null) q = q.eq("req_etiquetado", f.etiquetado);
     if (f.origen) q = q.eq("origen", f.origen);
+    if (f.metodoPago) q = q.eq("metodo_pago", f.metodoPago);
   }
 
   if (!f.incluirEliminados) q = q.is("eliminado_en", null);
@@ -83,6 +87,7 @@ export async function obtenerResumenProduccion(
       estado: f.estado,
       etiquetado: f.etiquetado,
       origen: f.origen,
+      metodo_pago: f.metodoPago,
       incluir_eliminados: f.incluirEliminados,
       incluir_archivados: true,
     },

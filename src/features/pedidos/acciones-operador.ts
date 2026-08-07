@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { exigirSesion } from "@/lib/auth/sesion";
 import { ESTADOS, type EstadoPedido } from "@/features/pedidos/estados";
+import {
+  METODOS_OPERADOR,
+  type MetodoPago,
+} from "@/features/pedidos/metodos-pago";
 
 export type ResultadoAccion = { ok: true } | { ok: false; error: string };
 
@@ -118,5 +122,36 @@ export async function eliminarPedido(
   if (error) return { ok: false, error: "No se pudo eliminar." };
 
   revalidatePath("/operador/pedidos");
+  return { ok: true };
+}
+
+/**
+ * Corregir el método de pago. Solo desde el operador: el cliente declara una
+ * intención al ordenar, pero el pago real se conoce en la entrega, y "mixto"
+ * solo puede saberse después del hecho.
+ */
+export async function cambiarMetodoPago(
+  pedidoId: string,
+  metodo: MetodoPago,
+): Promise<ResultadoAccion> {
+  await exigirSesion();
+
+  if (!METODOS_OPERADOR.includes(metodo)) {
+    return { ok: false, error: "Método de pago no válido." };
+  }
+
+  const { error } = await supabaseAdmin
+    .from("pedidos")
+    .update({ metodo_pago: metodo })
+    .eq("id", pedidoId)
+    .is("eliminado_en", null);
+
+  if (error) {
+    console.error("[cambiarMetodoPago]", error);
+    return { ok: false, error: "No se pudo actualizar el pago." };
+  }
+
+  revalidatePath("/operador/pedidos");
+  revalidatePath("/operador/archivo");
   return { ok: true };
 }

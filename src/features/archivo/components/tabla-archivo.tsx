@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ESTADOS } from "@/features/pedidos/estados";
+import { METODOS_PAGO } from "@/features/pedidos/metodos-pago";
 import type { FilaArchivo } from "@/features/archivo/queries";
 import {
   POR_PAGINA,
@@ -50,6 +51,7 @@ export function TablaArchivo({
               <th className="px-4 py-2.5 font-medium">Establecimiento</th>
               <th className="px-4 py-2.5 text-right font-medium">Botellas</th>
               <th className="px-4 py-2.5 font-medium">Estado</th>
+              <th className="px-4 py-2.5 font-medium">Pago</th>
               <th className="px-4 py-2.5 font-medium">Origen</th>
             </tr>
           </thead>
@@ -101,6 +103,22 @@ export function TablaArchivo({
                       />
                       {cfg.etiqueta}
                     </span>
+                  </td>
+                  <td className="px-4 py-2.5 text-sm">
+                    {f.metodo_pago ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span
+                          className="h-2 w-2 rounded-full"
+                          style={{
+                            backgroundColor: METODOS_PAGO[f.metodo_pago].color,
+                          }}
+                          aria-hidden="true"
+                        />
+                        {METODOS_PAGO[f.metodo_pago].corto}
+                      </span>
+                    ) : (
+                      <span className="text-tinta-suave">—</span>
+                    )}
                   </td>
                   <td className="px-4 py-2.5 text-sm text-tinta-media">
                     {f.origen === "cliente" ? "Cliente" : "Mostrador"}
