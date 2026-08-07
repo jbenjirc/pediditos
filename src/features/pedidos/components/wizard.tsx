@@ -44,6 +44,7 @@ export function WizardPedido({
     horaApertura: recordado?.hora_apertura_default?.slice(0, 5) ?? "07:00",
     cantidades: {},
     reqEtiquetado: false,
+    metodoPago: "efectivo",
     notas: "",
   });
 
@@ -91,6 +92,7 @@ export function WizardPedido({
           .filter(([, n]) => n > 0)
           .map(([productoId, cantidad]) => ({ productoId, cantidad })),
         reqEtiquetado: estado.reqEtiquetado,
+        metodoPago: estado.metodoPago,
         notas: estado.notas,
       });
 

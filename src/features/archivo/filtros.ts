@@ -1,4 +1,5 @@
 import type { EstadoPedido } from "@/features/pedidos/estados";
+import type { MetodoPago } from "@/features/pedidos/metodos-pago";
 import { fechaLocal } from "@/lib/fechas";
 
 export const POR_PAGINA = 50;
@@ -10,6 +11,7 @@ export type FiltrosArchivo = {
   estado: EstadoPedido | null;
   etiquetado: boolean | null;
   origen: "cliente" | "operador" | null;
+  metodoPago: MetodoPago | null;
   incluirEliminados: boolean;
   folio: string;
   pagina: number;
@@ -60,6 +62,12 @@ export function leerFiltros(
   const etiquetado =
     sp.etiquetado === "1" ? true : sp.etiquetado === "0" ? false : null;
 
+  const metodoPago = ["efectivo", "transferencia", "mixto"].includes(
+    sp.pago ?? "",
+  )
+    ? (sp.pago as MetodoPago)
+    : null;
+
   const pagina = Math.max(1, Number(sp.pagina) || 1);
 
   return {
@@ -70,6 +78,7 @@ export function leerFiltros(
     estado,
     etiquetado,
     origen,
+    metodoPago,
     incluirEliminados: sp.eliminados === "1",
     folio: (sp.folio ?? "").trim(),
     pagina,
@@ -83,6 +92,7 @@ export function aParams(f: Partial<FiltrosArchivo>): URLSearchParams {
   if (f.establecimientoId) p.set("establecimiento", f.establecimientoId);
   if (f.estado) p.set("estado", f.estado);
   if (f.origen) p.set("origen", f.origen);
+  if (f.metodoPago) p.set("pago", f.metodoPago);
   if (f.etiquetado === true) p.set("etiquetado", "1");
   if (f.etiquetado === false) p.set("etiquetado", "0");
   if (f.incluirEliminados) p.set("eliminados", "1");

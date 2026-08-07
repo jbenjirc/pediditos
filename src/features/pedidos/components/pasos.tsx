@@ -2,6 +2,8 @@
 
 import type { Establecimiento, Producto } from "@/features/catalogo/queries";
 import { CintaSabores } from "@/components/cinta-sabores";
+import { METODOS_CLIENTE, METODOS_PAGO } from "@/features/pedidos/metodos-pago";
+import type { MetodoPagoCliente } from "@/features/pedidos/metodos-pago";
 import { etiquetaDia, fechaLocal, horaLegible } from "@/lib/fechas";
 
 export type EstadoPedido = {
@@ -11,6 +13,9 @@ export type EstadoPedido = {
   horaApertura: string;
   cantidades: Record<string, number>;
   reqEtiquetado: boolean;
+  // Angosto a propósito: "mixto" no existe en la pantalla del cliente,
+  // y así TypeScript lo impide antes de llegar al servidor.
+  metodoPago: MetodoPagoCliente;
   notas: string;
 };
 
@@ -498,6 +503,22 @@ export function PasoExtras({
         </BotonOpcion>
       </div>
 
+      <h2 className="mb-3 mt-8 font-display text-lg font-semibold">
+        ¿Cómo vas a pagar?
+      </h2>
+
+      <div className="grid grid-cols-2 gap-2">
+        {METODOS_CLIENTE.map((m) => (
+          <BotonOpcion
+            key={m}
+            activo={estado.metodoPago === m}
+            onClick={() => set({ metodoPago: m })}
+          >
+            {METODOS_PAGO[m].etiqueta}
+          </BotonOpcion>
+        ))}
+      </div>
+
       <h2 className="mb-2 mt-8 font-display text-lg font-semibold">
         Notas para el pedido
       </h2>
@@ -593,6 +614,12 @@ export function PasoResumen({
             <dt className="text-tinta-media">Etiquetado</dt>
             <dd className="font-medium">
               {estado.reqEtiquetado ? "Sí" : "No"}
+            </dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-tinta-media">Pago</dt>
+            <dd className="font-medium">
+              {METODOS_PAGO[estado.metodoPago].etiqueta}
             </dd>
           </div>
           {estado.notas.trim() && (

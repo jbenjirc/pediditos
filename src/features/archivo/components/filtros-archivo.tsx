@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import type { Establecimiento } from "@/features/catalogo/queries";
 import { ESTADOS, ORDEN_FLUJO } from "@/features/pedidos/estados";
 import {
+  METODOS_OPERADOR,
+  METODOS_PAGO,
+} from "@/features/pedidos/metodos-pago";
+import {
   aParams,
   primerDiaDelMes,
   restarDias,
@@ -183,6 +187,26 @@ export function FiltrosArchivoPanel({
               <option value="">Todos</option>
               <option value="cliente">Cliente</option>
               <option value="operador">Mostrador</option>
+            </select>
+          </Campo>
+
+          <Campo etiqueta="Método de pago">
+            <select
+              value={filtros.metodoPago ?? ""}
+              onChange={(e) =>
+                aplicar({
+                  metodoPago: (e.target.value ||
+                    null) as FiltrosArchivo["metodoPago"],
+                })
+              }
+              className={claseInput}
+            >
+              <option value="">Todos</option>
+              {METODOS_OPERADOR.map((m) => (
+                <option key={m} value={m}>
+                  {METODOS_PAGO[m].etiqueta}
+                </option>
+              ))}
             </select>
           </Campo>
 

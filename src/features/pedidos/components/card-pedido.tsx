@@ -5,9 +5,14 @@ import { CintaSabores } from "@/components/cinta-sabores";
 import {
   archivarPedido,
   avanzarEstado,
+  cambiarMetodoPago,
   eliminarPedido,
   retrocederEstado,
 } from "@/features/pedidos/acciones-operador";
+import {
+  METODOS_OPERADOR,
+  METODOS_PAGO,
+} from "@/features/pedidos/metodos-pago";
 import { ESTADOS } from "@/features/pedidos/estados";
 import type { PedidoTablero } from "@/features/pedidos/queries";
 import { horaLegible } from "@/lib/fechas";
@@ -15,6 +20,7 @@ import { horaLegible } from "@/lib/fechas";
 export function CardPedido({ pedido }: { pedido: PedidoTablero }) {
   const [error, setError] = useState<string | null>(null);
   const [confirmando, setConfirmando] = useState(false);
+  const [editandoPago, setEditandoPago] = useState(false);
   const [pendiente, iniciar] = useTransition();
 
   const cfg = ESTADOS[pedido.estado];
@@ -115,6 +121,62 @@ export function CardPedido({ pedido }: { pedido: PedidoTablero }) {
           {pedido.total_botellas}
         </span>
       </p>
+
+      <div className="mt-2">
+        {editandoPago ? (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {METODOS_OPERADOR.map((m) => (
+              <button
+                key={m}
+                type="button"
+                disabled={pendiente}
+                onClick={() => {
+                  ejecutar(() => cambiarMetodoPago(pedido.id, m));
+                  setEditandoPago(false);
+                }}
+                className={`rounded-full border px-3 py-1 text-xs font-medium ${
+                  pedido.metodo_pago === m
+                    ? "border-acento bg-acento text-white"
+                    : "border-borde text-tinta-media"
+                }`}
+              >
+                {METODOS_PAGO[m].corto}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => setEditandoPago(false)}
+              className="px-2 text-xs text-tinta-suave"
+            >
+              Cancelar
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setEditandoPago(true)}
+            className="inline-flex items-center gap-1.5 text-sm text-tinta-media hover:text-tinta"
+            title="Cambiar método de pago"
+          >
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{
+                backgroundColor: pedido.metodo_pago
+                  ? METODOS_PAGO[pedido.metodo_pago].color
+                  : "var(--color-borde-fuerte)",
+              }}
+              aria-hidden="true"
+            />
+            {pedido.metodo_pago
+              ? METODOS_PAGO[pedido.metodo_pago].etiqueta
+              : "Pago sin definir"}
+            <span className="text-tinta-suave">·</span>
+            <span className="text-xs text-tinta-suave underline underline-offset-2">
+              cambiar
+            </span>
+          </button>
+        )}
+      </div>
 
       {pedido.notas && (
         <p className="mt-2 rounded-caja bg-elevado px-3 py-2 text-sm text-tinta-media">

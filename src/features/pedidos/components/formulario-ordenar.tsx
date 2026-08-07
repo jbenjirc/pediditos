@@ -4,6 +4,11 @@ import { useMemo, useRef, useState, useTransition } from "react";
 import { CintaSabores } from "@/components/cinta-sabores";
 import type { Establecimiento, Producto } from "@/features/catalogo/queries";
 import { crearPedidoOperador } from "@/features/pedidos/acciones-ordenar";
+import {
+  METODOS_OPERADOR,
+  METODOS_PAGO,
+  type MetodoPago,
+} from "@/features/pedidos/metodos-pago";
 import { etiquetaDia, fechaLocal } from "@/lib/fechas";
 
 type Estado = {
@@ -13,6 +18,7 @@ type Estado = {
   horaApertura: string;
   cantidades: Record<string, number>;
   reqEtiquetado: boolean;
+  metodoPago: MetodoPago;
   notas: string;
 };
 
@@ -23,6 +29,7 @@ const INICIAL: Estado = {
   horaApertura: "07:00",
   cantidades: {},
   reqEtiquetado: false,
+  metodoPago: "efectivo",
   notas: "",
 };
 
@@ -160,6 +167,7 @@ export function FormularioOrdenar({
           .filter(([, n]) => n > 0)
           .map(([productoId, cantidad]) => ({ productoId, cantidad })),
         reqEtiquetado: e.reqEtiquetado,
+        metodoPago: e.metodoPago,
         notas: e.notas,
       });
 
@@ -390,6 +398,29 @@ export function FormularioOrdenar({
               />
               Requiere etiquetado
             </label>
+
+            <fieldset className="mt-4">
+              <legend className="mb-1.5 text-[15px] font-medium">
+                Método de pago
+              </legend>
+              <div className="grid grid-cols-3 gap-2">
+                {METODOS_OPERADOR.map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => set({ metodoPago: m })}
+                    aria-pressed={e.metodoPago === m}
+                    className={`min-w-0 truncate rounded-caja border px-2 py-2.5 text-[15px] ${
+                      e.metodoPago === m
+                        ? "border-acento bg-acento/5 font-medium text-acento"
+                        : "border-borde text-tinta-media"
+                    }`}
+                  >
+                    {METODOS_PAGO[m].corto}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
 
             <label
               htmlFor="notas"
