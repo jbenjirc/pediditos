@@ -60,16 +60,33 @@ function Cantidad({
   return (
     <input
       type="text"
+      // inputMode="numeric" + pattern de dígitos es la combinación que pide el
+      // teclado de solo números. `type="number"` NO se usa a propósito: en
+      // Android agrega e, +, − y punto, y en escritorio mete flechitas que
+      // cambian el valor al hacer scroll sobre el campo.
       inputMode="numeric"
       pattern="[0-9]*"
+      enterKeyHint="next"
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck={false}
       aria-label={etiqueta}
       value={valor === 0 ? "" : String(valor)}
       placeholder="0"
-      onChange={(e) => {
-        const limpio = e.target.value.replace(/\D/g, "").slice(0, 3);
+      onPaste={(ev) => {
+        const texto = ev.clipboardData.getData("text");
+        if (/\D/.test(texto)) {
+          ev.preventDefault();
+          const limpio = texto.replace(/\D/g, "").slice(0, 3);
+          if (limpio) onCambio(Number(limpio));
+        }
+      }}
+      onChange={(ev) => {
+        const limpio = ev.target.value.replace(/\D/g, "").slice(0, 3);
         onCambio(limpio === "" ? 0 : Number(limpio));
       }}
-      onFocus={(e) => e.target.select()}
+      onFocus={(ev) => ev.target.select()}
       className={`cifras h-12 w-full rounded-caja border text-center text-lg
                   ${valor > 0 ? "border-acento bg-acento/5 font-semibold text-acento" : "border-borde bg-superficie"}`}
     />

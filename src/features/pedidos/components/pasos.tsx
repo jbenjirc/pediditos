@@ -63,7 +63,14 @@ function BotonOpcion({
   );
 }
 
-function Contador({
+/**
+ * Atajos de cantidad. Cubren pedidos por reja (12, 24) y por número redondo.
+ * Cuando el catálogo sea editable desde la app, esto se vuelve configurable
+ * por negocio; por ahora vive aquí.
+ */
+const ATAJOS = [5, 10, 12, 20, 24, 30];
+
+function SelectorCantidad({
   valor,
   onCambio,
   etiqueta,
@@ -79,27 +86,83 @@ function Contador({
         onClick={() => onCambio(Math.max(0, valor - 1))}
         disabled={valor === 0}
         aria-label={`Quitar uno de ${etiqueta}`}
-        className="h-11 w-11 rounded-caja border border-borde bg-superficie text-xl
+        className="h-11 w-11 shrink-0 rounded-caja border border-borde bg-superficie text-xl
                    text-tinta-media disabled:opacity-30 active:bg-elevado"
       >
         −
       </button>
-      <span
-        className="cifras w-10 text-center text-lg font-medium"
-        aria-live="polite"
-        aria-label={`${etiqueta}: ${valor}`}
-      >
-        {valor}
-      </span>
+
+      {/*
+        Sin onBeforeInput: en varios teclados móviles ese candado bloquea
+        también los dígitos y deja el campo muerto. Sanear en onChange
+        cubre lo mismo y funciona en todos lados.
+      */}
+      <input
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        enterKeyHint="done"
+        autoComplete="off"
+        aria-label={etiqueta}
+        value={valor === 0 ? "" : String(valor)}
+        placeholder="0"
+        onFocus={(ev) => ev.target.select()}
+        onChange={(ev) => {
+          const n = ev.target.value.replace(/\D/g, "").slice(0, 3);
+          onCambio(n === "" ? 0 : Number(n));
+        }}
+        className={`cifras h-11 w-16 rounded-caja border text-center text-lg ${
+          valor > 0
+            ? "border-acento bg-acento/5 font-semibold text-acento"
+            : "border-borde bg-superficie"
+        }`}
+      />
+
       <button
         type="button"
         onClick={() => onCambio(Math.min(999, valor + 1))}
         aria-label={`Agregar uno de ${etiqueta}`}
-        className="h-11 w-11 rounded-caja border border-acento bg-acento text-xl
+        className="h-11 w-11 shrink-0 rounded-caja border border-acento bg-acento text-xl
                    font-medium text-white active:bg-acento-vivo"
       >
         +
       </button>
+    </div>
+  );
+}
+
+function Atajos({
+  valor,
+  onCambio,
+  etiqueta,
+}: {
+  valor: number;
+  onCambio: (n: number) => void;
+  etiqueta: string;
+}) {
+  return (
+    <div className="grid grid-cols-3 gap-1.5">
+      {ATAJOS.map((n) => {
+        const activo = valor === n;
+        return (
+          <button
+            key={n}
+            type="button"
+            // Volver a tocar el atajo activo lo desmarca: corrige un toque
+            // equivocado sin buscar otro control.
+            onClick={() => onCambio(activo ? 0 : n)}
+            aria-pressed={activo}
+            aria-label={`${n} de ${etiqueta}`}
+            className={`cifras h-10 rounded-caja border text-[15px] transition-colors ${
+              activo
+                ? "border-acento bg-acento font-semibold text-white"
+                : "border-borde bg-superficie text-tinta-media active:bg-elevado"
+            }`}
+          >
+            {n}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -340,36 +403,67 @@ export function PasoCantidades({
 
   return (
     <>
-      <Titulo ayuda="Toca + o − para cada sabor.">¿Qué te llevamos?</Titulo>
+      <Titulo ayuda="Toca una cantidad o escríbela.">¿Qué te llevamos?</Titulo>
 
-      {grupos.map((g) => (
-        <section key={g.titulo} className="mb-7">
-          <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-tinta-suave">
-            {g.titulo}
-          </h2>
-          <ul className="divide-y divide-borde rounded-caja border border-borde bg-superficie">
-            {g.items.map((p) => (
-              <li key={p.id} className="flex items-center gap-3 px-3 py-2.5">
-                <span
-                  className="h-8 w-2 shrink-0 rounded-full"
-                  style={{
-                    backgroundColor: p.color_hex ?? "var(--color-borde-fuerte)",
-                  }}
-                  aria-hidden="true"
-                />
-                <span className="flex-1 text-[17px] leading-tight">
-                  {p.nombre}
+      {grupos.map((g) => {
+        const subtotal = g.items.reduce(
+          (a, p) => a + (estado.cantidades[p.id] ?? 0),
+          0,
+        );
+        return (
+          <section key={g.titulo} className="mb-7">
+            {/* El encabezado se queda fijo: con renglones altos es fácil
+                perder de vista en qué tamaño vas. */}
+            <div className="sticky top-16 z-10 -mx-5 mb-2 flex items-baseline justify-between bg-lienzo px-5 py-2">
+              <h2 className="text-sm font-medium uppercase tracking-wide text-tinta-suave">
+                {g.titulo}
+              </h2>
+              {subtotal > 0 && (
+                <span className="cifras text-sm font-semibold text-acento">
+                  {subtotal}
                 </span>
-                <Contador
-                  valor={estado.cantidades[p.id] ?? 0}
-                  onCambio={(n) => cambiar(p.id, n)}
-                  etiqueta={`${p.nombre} ${p.presentacion ?? ""}`.trim()}
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+              )}
+            </div>
+
+            <ul className="divide-y divide-borde rounded-caja border border-borde bg-superficie">
+              {g.items.map((p) => {
+                const valor = estado.cantidades[p.id] ?? 0;
+                const nombreCompleto =
+                  `${p.nombre} ${p.presentacion ?? ""}`.trim();
+                return (
+                  <li key={p.id} className="px-3 py-3.5">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="h-8 w-2 shrink-0 rounded-full"
+                        style={{
+                          backgroundColor:
+                            p.color_hex ?? "var(--color-borde-fuerte)",
+                        }}
+                        aria-hidden="true"
+                      />
+                      <span className="min-w-0 flex-1 text-[17px] leading-tight">
+                        {p.nombre}
+                      </span>
+                      <SelectorCantidad
+                        valor={valor}
+                        onCambio={(n) => cambiar(p.id, n)}
+                        etiqueta={nombreCompleto}
+                      />
+                    </div>
+                    <div className="mt-2.5">
+                      <Atajos
+                        valor={valor}
+                        onCambio={(n) => cambiar(p.id, n)}
+                        etiqueta={nombreCompleto}
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        );
+      })}
     </>
   );
 }
