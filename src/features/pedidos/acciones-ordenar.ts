@@ -72,5 +72,6 @@ export async function crearPedidoOperador(
     folio: r.folio,
     establecimientoNombre: r.establecimiento_nombre,
     totalBotellas: r.total_botellas,
+    creadoEn: r.creado_en,
   };
 }

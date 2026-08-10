@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import type { Establecimiento, Producto } from "@/features/catalogo/queries";
 import { crearPedido, olvidarNegocio } from "@/features/pedidos/actions";
 import type { ResultadoPedido } from "@/features/pedidos/tipos";
+import { fechaHoraLegible } from "@/lib/fechas";
 import {
   PasoCantidades,
   PasoCuando,
@@ -217,6 +218,13 @@ function ModalEnviado({
         </p>
         <p className="mt-2 text-[15px] text-tinta-media">
           Guarda este folio. Con él puedes preguntar por tu pedido.
+        </p>
+
+        <p className="mt-4 text-[15px] text-tinta-media">
+          Pedido hecho el{" "}
+          <span className="font-medium text-tinta">
+            {fechaHoraLegible(resultado.creadoEn)}
+          </span>
         </p>
 
         <p className="mt-6 border-t border-borde pt-6 text-[17px]">

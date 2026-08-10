@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { METODOS_PAGO } from "@/features/pedidos/metodos-pago";
-import { etiquetaDia, horaLegible } from "@/lib/fechas";
+import { etiquetaDia, fechaHoraLegible, horaLegible } from "@/lib/fechas";
 import { BotonImprimir } from "./boton-imprimir";
 
 /**
@@ -19,7 +19,7 @@ export default async function Recibo({
   const { data } = await supabaseAdmin
     .from("pedidos")
     .select(
-      "folio, establecimiento_nombre, hora_apertura, fecha_entrega, req_etiquetado, metodo_pago, notas, total_botellas, pedido_items(producto_nombre, producto_presentacion, categoria, cantidad)",
+      "folio, establecimiento_nombre, hora_apertura, fecha_entrega, creado_en, req_etiquetado, metodo_pago, notas, total_botellas, pedido_items(producto_nombre, producto_presentacion, categoria, cantidad)",
     )
     .eq("folio", decodeURIComponent(folio))
     .is("eliminado_en", null)
@@ -38,6 +38,9 @@ export default async function Recibo({
           Comprobante de pedido
         </p>
         <p className="cifras mt-1 text-3xl font-bold">{data.folio}</p>
+        <p className="mt-1 text-sm text-tinta-media">
+          Pedido hecho el {fechaHoraLegible(data.creado_en)}
+        </p>
       </header>
 
       <section className="py-4">

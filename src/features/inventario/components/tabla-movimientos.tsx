@@ -8,6 +8,7 @@ import {
   type FilaProduccion,
 } from "@/features/inventario/tipos";
 import { aPesos } from "@/lib/dinero";
+import { horaDeISO } from "@/lib/fechas";
 
 function fechaCorta(iso: string) {
   const [a, m, d] = iso.split("-").map(Number);
@@ -170,10 +171,7 @@ export function TablaMovimientos({
                     {fechaCorta(p.fecha)}
                   </td>
                   <td className="cifras px-4 py-2.5 text-sm text-tinta-suave">
-                    {new Date(p.creado_en).toLocaleTimeString("es-MX", {
-                      hour: "numeric",
-                      minute: "2-digit",
-                    })}
+                    {horaDeISO(p.creado_en)}
                   </td>
                   <td className="px-4 py-2.5">
                     {p.categoria === "pulpa" ? "Pulpa " : ""}
