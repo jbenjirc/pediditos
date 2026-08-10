@@ -9,7 +9,7 @@ import {
   METODOS_PAGO,
   type MetodoPago,
 } from "@/features/pedidos/metodos-pago";
-import { etiquetaDia, fechaLocal } from "@/lib/fechas";
+import { etiquetaDia, fechaHoraCorta, fechaLocal } from "@/lib/fechas";
 
 type Estado = {
   establecimientoId: string | null;
@@ -112,6 +112,7 @@ export function FormularioOrdenar({
   const [ultimo, setUltimo] = useState<{
     folio: string;
     nombre: string;
+    creadoEn: string;
   } | null>(null);
   const [enviando, iniciar] = useTransition();
   const refNegocio = useRef<HTMLSelectElement>(null);
@@ -177,7 +178,11 @@ export function FormularioOrdenar({
       }
 
       // Limpia solo: el operador casi siempre tiene otro pedido esperando.
-      setUltimo({ folio: r.folio, nombre: r.establecimientoNombre });
+      setUltimo({
+        folio: r.folio,
+        nombre: r.establecimientoNombre,
+        creadoEn: r.creadoEn,
+      });
       setE(INICIAL);
       refNegocio.current?.focus();
     });
@@ -195,6 +200,9 @@ export function FormularioOrdenar({
             Guardado{" "}
             <span className="cifras font-bold text-acento">{ultimo.folio}</span>{" "}
             para <span className="font-medium">{ultimo.nombre}</span>
+            <span className="cifras ml-2 text-tinta-suave">
+              {fechaHoraCorta(ultimo.creadoEn)}
+            </span>
           </p>
           <div className="flex items-center gap-3">
             <a

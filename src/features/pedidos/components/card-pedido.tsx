@@ -15,7 +15,7 @@ import {
 } from "@/features/pedidos/metodos-pago";
 import { ESTADOS } from "@/features/pedidos/estados";
 import type { PedidoTablero } from "@/features/pedidos/queries";
-import { horaLegible } from "@/lib/fechas";
+import { fechaHoraCorta, horaLegible } from "@/lib/fechas";
 
 export function CardPedido({ pedido }: { pedido: PedidoTablero }) {
   const [error, setError] = useState<string | null>(null);
@@ -66,19 +66,20 @@ export function CardPedido({ pedido }: { pedido: PedidoTablero }) {
         </div>
       </header>
 
-      <p className="mt-2 text-sm text-tinta-media">
-        Abre a las {horaLegible(String(pedido.hora_apertura).slice(0, 5))}
-        <span className="text-tinta-suave">
-          {" · "}
-          pedido{" "}
-          {new Date(pedido.creado_en).toLocaleString("es-MX", {
-            day: "numeric",
-            month: "short",
-            hour: "numeric",
-            minute: "2-digit",
-          })}
-        </span>
-      </p>
+      <dl className="mt-2 space-y-0.5 text-sm">
+        <div className="flex gap-2">
+          <dt className="text-tinta-suave">Abre</dt>
+          <dd className="text-tinta-media">
+            {horaLegible(String(pedido.hora_apertura).slice(0, 5))}
+          </dd>
+        </div>
+        <div className="flex gap-2">
+          <dt className="text-tinta-suave">Pedido</dt>
+          <dd className="cifras text-tinta-media">
+            {fechaHoraCorta(pedido.creado_en)}
+          </dd>
+        </div>
+      </dl>
 
       <div className="my-3">
         <CintaSabores
