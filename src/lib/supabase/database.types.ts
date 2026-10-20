@@ -10,10 +10,360 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
+      arp_asignaciones: {
+        Row: {
+          activo: boolean
+          creado_en: string
+          id: string
+          rol_app: string
+          ubicacion_id: string | null
+          usuario_id: string
+        }
+        Insert: {
+          activo?: boolean
+          creado_en?: string
+          id?: string
+          rol_app: string
+          ubicacion_id?: string | null
+          usuario_id: string
+        }
+        Update: {
+          activo?: boolean
+          creado_en?: string
+          id?: string
+          rol_app?: string
+          ubicacion_id?: string | null
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arp_asignaciones_ubicacion_id_fkey"
+            columns: ["ubicacion_id"]
+            isOneToOne: false
+            referencedRelation: "arp_inventario_actual"
+            referencedColumns: ["ubicacion_id"]
+          },
+          {
+            foreignKeyName: "arp_asignaciones_ubicacion_id_fkey"
+            columns: ["ubicacion_id"]
+            isOneToOne: false
+            referencedRelation: "arp_ubicaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_asignaciones_usuario_fk"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arp_clientes: {
+        Row: {
+          activo: boolean
+          ciudad: string | null
+          creado_en: string
+          id: string
+          nombre: string
+          telefono: string | null
+        }
+        Insert: {
+          activo?: boolean
+          ciudad?: string | null
+          creado_en?: string
+          id?: string
+          nombre: string
+          telefono?: string | null
+        }
+        Update: {
+          activo?: boolean
+          ciudad?: string | null
+          creado_en?: string
+          id?: string
+          nombre?: string
+          telefono?: string | null
+        }
+        Relationships: []
+      }
+      arp_envios: {
+        Row: {
+          actualizado_en: string
+          archivado: boolean
+          cantidad_arpillas: number
+          cantidad_recibida: number | null
+          creado_en: string
+          creado_por: string | null
+          destino_id: string
+          estado: string
+          evidencia_recepcion_url: string | null
+          evidencia_url: string | null
+          fecha_envio: string
+          fecha_recepcion: string | null
+          folio: string
+          id: string
+          notas: string | null
+          notas_recepcion: string | null
+          origen_id: string
+          recibido_por: string | null
+          version: number
+        }
+        Insert: {
+          actualizado_en?: string
+          archivado?: boolean
+          cantidad_arpillas: number
+          cantidad_recibida?: number | null
+          creado_en?: string
+          creado_por?: string | null
+          destino_id: string
+          estado?: string
+          evidencia_recepcion_url?: string | null
+          evidencia_url?: string | null
+          fecha_envio?: string
+          fecha_recepcion?: string | null
+          folio?: string
+          id?: string
+          notas?: string | null
+          notas_recepcion?: string | null
+          origen_id: string
+          recibido_por?: string | null
+          version?: number
+        }
+        Update: {
+          actualizado_en?: string
+          archivado?: boolean
+          cantidad_arpillas?: number
+          cantidad_recibida?: number | null
+          creado_en?: string
+          creado_por?: string | null
+          destino_id?: string
+          estado?: string
+          evidencia_recepcion_url?: string | null
+          evidencia_url?: string | null
+          fecha_envio?: string
+          fecha_recepcion?: string | null
+          folio?: string
+          id?: string
+          notas?: string | null
+          notas_recepcion?: string | null
+          origen_id?: string
+          recibido_por?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arp_envios_creado_por_fk"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_envios_destino_id_fkey"
+            columns: ["destino_id"]
+            isOneToOne: false
+            referencedRelation: "arp_inventario_actual"
+            referencedColumns: ["ubicacion_id"]
+          },
+          {
+            foreignKeyName: "arp_envios_destino_id_fkey"
+            columns: ["destino_id"]
+            isOneToOne: false
+            referencedRelation: "arp_ubicaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_envios_origen_id_fkey"
+            columns: ["origen_id"]
+            isOneToOne: false
+            referencedRelation: "arp_inventario_actual"
+            referencedColumns: ["ubicacion_id"]
+          },
+          {
+            foreignKeyName: "arp_envios_origen_id_fkey"
+            columns: ["origen_id"]
+            isOneToOne: false
+            referencedRelation: "arp_ubicaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_envios_recibido_por_fk"
+            columns: ["recibido_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arp_movimientos_inventario: {
+        Row: {
+          cantidad: number
+          creado_en: string
+          creado_por: string | null
+          id: string
+          motivo: string | null
+          referencia_id: string | null
+          referencia_tabla: string | null
+          tipo: string
+          ubicacion_id: string
+        }
+        Insert: {
+          cantidad: number
+          creado_en?: string
+          creado_por?: string | null
+          id?: string
+          motivo?: string | null
+          referencia_id?: string | null
+          referencia_tabla?: string | null
+          tipo: string
+          ubicacion_id: string
+        }
+        Update: {
+          cantidad?: number
+          creado_en?: string
+          creado_por?: string | null
+          id?: string
+          motivo?: string | null
+          referencia_id?: string | null
+          referencia_tabla?: string | null
+          tipo?: string
+          ubicacion_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arp_movimientos_creado_por_fk"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_movimientos_inventario_ubicacion_id_fkey"
+            columns: ["ubicacion_id"]
+            isOneToOne: false
+            referencedRelation: "arp_inventario_actual"
+            referencedColumns: ["ubicacion_id"]
+          },
+          {
+            foreignKeyName: "arp_movimientos_inventario_ubicacion_id_fkey"
+            columns: ["ubicacion_id"]
+            isOneToOne: false
+            referencedRelation: "arp_ubicaciones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arp_ubicaciones: {
+        Row: {
+          activo: boolean
+          ciudad: string | null
+          creado_en: string
+          es_destino: boolean
+          es_origen: boolean
+          id: string
+          nombre: string
+          pin_hmac: string | null
+        }
+        Insert: {
+          activo?: boolean
+          ciudad?: string | null
+          creado_en?: string
+          es_destino?: boolean
+          es_origen?: boolean
+          id?: string
+          nombre: string
+          pin_hmac?: string | null
+        }
+        Update: {
+          activo?: boolean
+          ciudad?: string | null
+          creado_en?: string
+          es_destino?: boolean
+          es_origen?: boolean
+          id?: string
+          nombre?: string
+          pin_hmac?: string | null
+        }
+        Relationships: []
+      }
+      arp_ventas: {
+        Row: {
+          cancelada: boolean
+          cantidad_arpillas: number
+          cliente_id: string
+          creado_en: string
+          fecha_venta: string
+          folio: string
+          id: string
+          motivo_cancelacion: string | null
+          notas: string | null
+          precio_unitario: number | null
+          registrado_por: string | null
+          ubicacion_id: string
+        }
+        Insert: {
+          cancelada?: boolean
+          cantidad_arpillas: number
+          cliente_id: string
+          creado_en?: string
+          fecha_venta?: string
+          folio?: string
+          id?: string
+          motivo_cancelacion?: string | null
+          notas?: string | null
+          precio_unitario?: number | null
+          registrado_por?: string | null
+          ubicacion_id: string
+        }
+        Update: {
+          cancelada?: boolean
+          cantidad_arpillas?: number
+          cliente_id?: string
+          creado_en?: string
+          fecha_venta?: string
+          folio?: string
+          id?: string
+          motivo_cancelacion?: string | null
+          notas?: string | null
+          precio_unitario?: number | null
+          registrado_por?: string | null
+          ubicacion_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arp_ventas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "arp_clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_ventas_registrado_por_fk"
+            columns: ["registrado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_ventas_ubicacion_id_fkey"
+            columns: ["ubicacion_id"]
+            isOneToOne: false
+            referencedRelation: "arp_inventario_actual"
+            referencedColumns: ["ubicacion_id"]
+          },
+          {
+            foreignKeyName: "arp_ventas_ubicacion_id_fkey"
+            columns: ["ubicacion_id"]
+            isOneToOne: false
+            referencedRelation: "arp_ubicaciones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conceptos_gasto: {
         Row: {
           activo: boolean
@@ -481,9 +831,254 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      arp_envios_detalle: {
+        Row: {
+          actualizado_en: string | null
+          archivado: boolean | null
+          cantidad_arpillas: number | null
+          cantidad_recibida: number | null
+          creado_en: string | null
+          creado_por: string | null
+          destino_id: string | null
+          destino_nombre: string | null
+          diferencia: number | null
+          estado: string | null
+          evidencia_recepcion_url: string | null
+          evidencia_url: string | null
+          fecha_envio: string | null
+          fecha_recepcion: string | null
+          folio: string | null
+          id: string | null
+          notas: string | null
+          notas_recepcion: string | null
+          origen_id: string | null
+          origen_nombre: string | null
+          recibido_por: string | null
+          version: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arp_envios_creado_por_fk"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_envios_destino_id_fkey"
+            columns: ["destino_id"]
+            isOneToOne: false
+            referencedRelation: "arp_inventario_actual"
+            referencedColumns: ["ubicacion_id"]
+          },
+          {
+            foreignKeyName: "arp_envios_destino_id_fkey"
+            columns: ["destino_id"]
+            isOneToOne: false
+            referencedRelation: "arp_ubicaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_envios_origen_id_fkey"
+            columns: ["origen_id"]
+            isOneToOne: false
+            referencedRelation: "arp_inventario_actual"
+            referencedColumns: ["ubicacion_id"]
+          },
+          {
+            foreignKeyName: "arp_envios_origen_id_fkey"
+            columns: ["origen_id"]
+            isOneToOne: false
+            referencedRelation: "arp_ubicaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_envios_recibido_por_fk"
+            columns: ["recibido_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arp_inventario_actual: {
+        Row: {
+          ciudad: string | null
+          existencia: number | null
+          ubicacion: string | null
+          ubicacion_id: string | null
+          ultimo_movimiento: string | null
+        }
+        Relationships: []
+      }
+      arp_ventas_detalle: {
+        Row: {
+          cancelada: boolean | null
+          cantidad_arpillas: number | null
+          cliente_ciudad: string | null
+          cliente_id: string | null
+          cliente_nombre: string | null
+          creado_en: string | null
+          fecha_venta: string | null
+          folio: string | null
+          id: string | null
+          motivo_cancelacion: string | null
+          notas: string | null
+          precio_unitario: number | null
+          registrado_por: string | null
+          total: number | null
+          ubicacion_id: string | null
+          ubicacion_nombre: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arp_ventas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "arp_clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_ventas_registrado_por_fk"
+            columns: ["registrado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arp_ventas_ubicacion_id_fkey"
+            columns: ["ubicacion_id"]
+            isOneToOne: false
+            referencedRelation: "arp_inventario_actual"
+            referencedColumns: ["ubicacion_id"]
+          },
+          {
+            foreignKeyName: "arp_ventas_ubicacion_id_fkey"
+            columns: ["ubicacion_id"]
+            isOneToOne: false
+            referencedRelation: "arp_ubicaciones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      arp_ajustar_inventario: {
+        Args: {
+          p_cantidad: number
+          p_motivo: string
+          p_ubicacion_id: string
+          p_usuario_id?: string
+        }
+        Returns: {
+          cantidad: number
+          creado_en: string
+          creado_por: string | null
+          id: string
+          motivo: string | null
+          referencia_id: string | null
+          referencia_tabla: string | null
+          tipo: string
+          ubicacion_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "arp_movimientos_inventario"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      arp_cancelar_venta: {
+        Args: { p_motivo?: string; p_usuario_id?: string; p_venta_id: string }
+        Returns: {
+          cancelada: boolean
+          cantidad_arpillas: number
+          cliente_id: string
+          creado_en: string
+          fecha_venta: string
+          folio: string
+          id: string
+          motivo_cancelacion: string | null
+          notas: string | null
+          precio_unitario: number | null
+          registrado_por: string | null
+          ubicacion_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "arp_ventas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      arp_confirmar_recepcion: {
+        Args: {
+          p_cantidad_recibida: number
+          p_envio_id: string
+          p_evidencia_url?: string
+          p_notas?: string
+          p_usuario_id?: string
+          p_version: number
+        }
+        Returns: {
+          actualizado_en: string
+          archivado: boolean
+          cantidad_arpillas: number
+          cantidad_recibida: number | null
+          creado_en: string
+          creado_por: string | null
+          destino_id: string
+          estado: string
+          evidencia_recepcion_url: string | null
+          evidencia_url: string | null
+          fecha_envio: string
+          fecha_recepcion: string | null
+          folio: string
+          id: string
+          notas: string | null
+          notas_recepcion: string | null
+          origen_id: string
+          recibido_por: string | null
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "arp_envios"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      arp_registrar_venta: {
+        Args: {
+          p_cantidad: number
+          p_cliente_id: string
+          p_fecha?: string
+          p_notas?: string
+          p_precio_unitario?: number
+          p_ubicacion_id: string
+          p_usuario_id?: string
+        }
+        Returns: {
+          cancelada: boolean
+          cantidad_arpillas: number
+          cliente_id: string
+          creado_en: string
+          fecha_venta: string
+          folio: string
+          id: string
+          motivo_cancelacion: string | null
+          notas: string | null
+          precio_unitario: number | null
+          registrado_por: string | null
+          ubicacion_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "arp_ventas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       crear_pedido: { Args: { p_pedido: Json }; Returns: Json }
       esta_bloqueado: { Args: { p_ip: string }; Returns: boolean }
       registrar_intento_fallido: { Args: { p_ip: string }; Returns: boolean }
@@ -520,12 +1115,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -549,11 +1144,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -574,11 +1169,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -599,11 +1194,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -616,11 +1211,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
