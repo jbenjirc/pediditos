@@ -1,18 +1,33 @@
-curl -s "https://kdbndyathjbdxkekltxp.supabase.co/rest/v1/arp_envios?select=*" \
-  -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtkYm5keWF0aGpiZHhrZWtsdHhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3MTkwOTksImV4cCI6MjEwMTI5NTA5OX0.yiwmcbTezDr0_3om-ZRAZvfo0nEKiUZXZz3um0gvkls"
+import Link from "next/link";
 
+export default function ReceptorPage() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-neutral-900">
+            Recepción y Ventas
+          </h1>
+          <p className="text-sm text-neutral-500">
+            Envíos en camino y registro de ventas locales.
+          </p>
+        </div>
+        <Link
+          href="/receptor/venta"
+          className="inline-flex items-center justify-center rounded-xl bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800"
+        >
+          + Nueva Venta
+        </Link>
+      </div>
 
-
-
-
-
-
-npx supabase gen types typescript --project-id kdbndyathjbdxkekltxp > src/lib/supabase/database.types.ts
-
-
-
-
- set -a; source .env.local; set +a
-node -e "const c=require('crypto'); \
-console.log(c.createHmac('sha256', process.env.ARP_SESSION_SECRET) \
-.update('pin:4821').digest('hex'))"
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+        <h2 className="text-sm font-semibold text-neutral-900">
+          Envíos por Recibir
+        </h2>
+        <div className="mt-4 rounded-xl border border-dashed border-neutral-200 p-8 text-center text-sm text-neutral-500">
+          No hay envíos pendientes de confirmación en este momento.
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -43,7 +43,7 @@ const origenDistintoDestino = <
 
 const mensajeOrigenDestino = {
   message: "El origen y el destino deben ser distintos",
-  path: ["destinoId"] as const,
+  path: ["destinoId"],
 };
 
 /** Guardar sin confirmar: la foto todavía puede faltar. */
