@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { exigirSesion } from "@/features/arpillas/sesion";
 import { supabaseAdmin } from "@/features/arpillas/db";
-import { salir } from "@/features/acceso/actions";
+import { salir } from "../arpillas/actions";
 
 /**
  * El receptor siempre opera desde una ubicación, que viene firmada en la
