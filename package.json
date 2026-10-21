@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:validar": "node --env-file=.env.local scripts/validar-db-arpillas.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.0",
